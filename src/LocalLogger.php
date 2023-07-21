@@ -8,10 +8,10 @@ use Composer\InstalledVersions;
 use Exception;
 use Psr\Log\AbstractLogger;
 use ReflectionClass;
+use Stringable;
 
 class LocalLogger extends AbstractLogger
 {
-
     private $log_path;
 
     public function __construct(string $log_path = null)
@@ -31,18 +31,7 @@ class LocalLogger extends AbstractLogger
         $this->log_path = $log_path;
     }
 
-    /**
-     * Logs with an arbitrary level.
-     *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return void
-     *
-     * @throws \Psr\Log\InvalidArgumentException
-     */
-    public function log($level, $message, array $context = array())
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         error_log('[' . date(DATE_ATOM) . '] ' . str_pad(strtoupper($level), 9, ' ', STR_PAD_LEFT) . ':' . $message . ' ' . json_encode($context, JSON_UNESCAPED_UNICODE) . PHP_EOL, 3, $this->log_path . '/' . date('Y-m-d') . '.log');
     }
